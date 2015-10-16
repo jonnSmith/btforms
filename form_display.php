@@ -624,20 +624,27 @@ class GFFormDisplay{
     }
 
     public static function ajaxJquery($gform_id) {
+
+        $default_anchor = true;
+        $use_anchor = apply_filters("gform_confirmation_anchor_{$gform_id}", apply_filters("gform_confirmation_anchor", $default_anchor));
+        $scroll_position = array('default' => '', 'confirmation' => '');
+
+        if($use_anchor !== false) {
+            $scroll_position['default'] = is_numeric($use_anchor) ? "jQuery(document).scrollTop(" . intval($use_anchor) . ");" : "jQuery(document).scrollTop(jQuery('#gform_wrapper_{$gform_id}').offset().top);";
+            $scroll_position['confirmation'] = is_numeric($use_anchor) ? "jQuery(document).scrollTop(" . intval($use_anchor) . ");" : "jQuery(document).scrollTop(jQuery('#gforms_confirmation_message').offset().top);";
+        }
+
         $ajax_string = "<iframe style='display:none;width:0px; height:0px;' src='about:blank' name='gform_ajax_frame_{$gform_id}' id='gform_ajax_frame_{$gform_id}'></iframe><script type='text/javascript'>" . apply_filters("gform_cdata_open", "") . "" .
-                "function gformInitSpinner_{$gform_id}(){" .
-                        "jQuery('#gform_{$gform_id}').validator().on('submit', function (e) { " .
-                        "if(jQuery('#gform_ajax_spinner_{$gform_id}').length == 0 && !e.isDefaultPrevented()){".
-                                "jQuery('#gform_submit_button_{$gform_id}, #gform_wrapper_{$gform_id} .gform_next_button, #gform_wrapper_{$gform_id} .gform_image_button').after('<' + 'div id=\"gform_ajax_spinner_{$form_id}\"  class=\"gform_ajax_spinner\" ><i class=\"fa fa-spinner fa-spin\"></i>'+ '<' + '/div' + '>'); " .
+                "function gformInitSpinner_{$gform_id}(){ jQuery('#gform_{$gform_id}').validator().on('submit', function (e) { " .
+                        "if(jQuery('#gform_ajax_spinner_{$gform_id}').length == 0 && !e.isDefaultPrevented()){ jQuery('#gform_submit_button_{$gform_id}, #gform_wrapper_{$gform_id} .gform_next_button, #gform_wrapper_{$gform_id} .gform_image_button').after('<' + 'div id=\"gform_ajax_spinner_{$gform_id}\"  class=\"gform_ajax_spinner\" ><i class=\"fa fa-spinner fa-spin\"></i>'+ '<' + '/div' + '>'); " .
                                 "}" .
                                 "} );" .
                                 "}" .
                                 "jQuery(document).ready(function($){".
-                                "if(jQuery('.bootstrap-select').length && jQuery().selectpicker) { jQuery('.bootstrap-select').selectpicker(); } ".
+                                "if($('.bootstrap-select').length && $().selectpicker) { $('.bootstrap-select').selectpicker(); } ".
                                 "jQuery('#gform_{$gform_id} :input').each(function() { if( jQuery(this).val() == jQuery(this).attr('placeholder')) { jQuery(this).val(''); } });" .
                                 "gformInitSpinner_{$gform_id}();" .
-                                "jQuery('#gform_ajax_frame_{$gform_id}').load( function(){" .
-                            "var contents = jQuery(this).contents().find('*').html();" .
+                                "jQuery('#gform_ajax_frame_{$gform_id}').load( function(){ var contents = jQuery(this).contents().find('*').html();" .
                             "if(jQuery(this).contents().find('.bootstrap-select').length && jQuery().selectpicker) { jQuery(this).contents().find('.bootstrap-select').selectpicker(); }".
                             "var is_postback = contents.indexOf('GF_AJAX_POSTBACK') >= 0;" .
                             "if(!is_postback){return;}" .
@@ -1774,7 +1781,7 @@ class GFFormDisplay{
 
                     "if(!window['gf_form_conditional_logic'])" .
                         "window['gf_form_conditional_logic'] = new Array();" .
-                    "window['gf_form_conditional_logic'][{$form['id']}] = {'logic' : {" . $logics . " }, 'dependents' : {" . $dependents . " }, 'animation' : " . $animation . " , 'defaults' : " . json_encode($default_values) . " }; ".
+                    "window['gf_form_conditional_logic'][{$form['id']}] = {'logic' : { " . $logics . " }, 'dependents' : {" . $dependents . " }, 'animation' : " . $animation . " , 'defaults' : " . json_encode($default_values) . " }; ".
                     "if(!window['gf_number_format'])" .
                         "window['gf_number_format'] = '" . $number_format . "';" .
 
@@ -1863,7 +1870,7 @@ class GFFormDisplay{
 
             $script_string .=
                 "jQuery(document).bind('gform_post_render', function(event, formId, currentPage){" .
-                    "if(formId == {$form['id']}) {";
+                    "if(formId == {$form['id']}) { ";
 
                     foreach($init_scripts as $init_script){
                         if($init_script["location"] == self::ON_PAGE_RENDER){
