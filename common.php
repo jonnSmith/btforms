@@ -1,7 +1,7 @@
 <?php
 class GFCommon{
 
-    public static $version = "1.7.9";
+    public static $version = "0.0.1";
     public static $tab_index = 1;
     public static $errors = array();
 
@@ -1387,11 +1387,11 @@ class GFCommon{
         $message = GFCommon::replace_variables(rgget("message", $form["notification"]), $form, $lead, false, false, !rgget("disableAutoformat", $form["notification"]), $message_format);
         $message = do_shortcode($message);
 
-        $version_info = self::get_version_info();
+        /*$version_info = self::get_version_info();
         $is_expired = !rgempty("expiration_time", $version_info) && $version_info["expiration_time"] < time();
         if(!$version_info["is_valid_key"] && $is_expired){
             $message .= "<br/><br/>Your Gravity Forms License Key has expired. In order to continue receiving support and software updates you must renew your license key. You can do so by following the renewal instructions on the Gravity Forms Settings page in your WordPress Dashboard or by <a href='http://www.gravityhelp.com/renew-license/?key=" . self::get_key() . "'>clicking here</a>.";
-        }
+        }*/
 
         $from = rgempty("fromField", $form["notification"]) ? rgget("from", $form["notification"]) : rgget($form["notification"]["fromField"], $lead);
 
@@ -1781,7 +1781,7 @@ class GFCommon{
     }
 
     public static function has_update($use_cache=true){
-        $version_info = GFCommon::get_version_info($use_cache);
+        //$version_info = GFCommon::get_version_info($use_cache);
         //return version_compare(GFCommon::$version, $version_info["version"], '<');
         return false;
     }
@@ -1804,6 +1804,8 @@ class GFCommon{
     }
 
     public static function get_version_info($cache=true){
+
+        return true;
 
         $raw_response = get_transient("gform_update_info");
         if(!$cache)
