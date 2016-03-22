@@ -28,10 +28,10 @@ abstract class GFFeedAddOn extends GFAddOn {
 
         //upgrading Feed Add-On base class
         $installed_version = get_option("gravityformsaddon_feed-base_version");
-        if ($installed_version != $this->_feed_version)
-            $this->upgrade_base($installed_version);
+        //if ($installed_version != $this->_feed_version)
+            //$this->upgrade_base($installed_version);
 
-        update_option("gravityformsaddon_feed-base_version", $this->_feed_version);
+        //update_option("gravityformsaddon_feed-base_version", $this->_feed_version);
     }
 
     private function upgrade_base($previous_version) {

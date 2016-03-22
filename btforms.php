@@ -1,9 +1,9 @@
 <?php
 /*
-Plugin Name: Bootstrap Forms
+Plugin Name: BootstrapsForms
 Plugin URI: https://github.com/jonnSmith/btforms
 Description:
-Version: 0.0.1
+Version: 1.0.1
 Author:
 Author URI:
 
