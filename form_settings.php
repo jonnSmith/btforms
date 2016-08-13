@@ -1319,6 +1319,14 @@ class GFConfirmationTable extends WP_List_Table {
         parent::__construct();
     }
 
+    function get_columns() {
+        $columns = array(
+            'name' => 'Name',
+            'subject' => 'Subject'
+        );
+        return $columns;
+    }
+
     function prepare_items() {
         $this->items = $this->form['confirmations'];
     }

@@ -845,6 +845,14 @@ class GFAddOnFeedsTable extends WP_List_Table {
         ));
     }
 
+    function get_columns() {
+        $columns = array(
+            'name' => 'Name',
+            'subject' => 'Subject'
+        );
+        return $columns;
+    }
+
     function prepare_items() {
         $this->items = isset($this->_feeds) ? $this->_feeds : array();
     }
