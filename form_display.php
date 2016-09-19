@@ -940,6 +940,9 @@ class GFFormDisplay{
             $anchor = apply_filters("gform_confirmation_anchor_{$form["id"]}", apply_filters("gform_confirmation_anchor", $default_anchor)) ? "<a id='gf_{$form["id"]}' name='gf_{$form["id"]}' class='gform_anchor' ></a>" : "";
             $nl2br = rgar($form["confirmation"],"disableAutoformat") ? false : true;
             $cssClass = rgar($form, "cssClass");
+            if (function_exists('qtranxf_getLanguage') && !empty($form["confirmation"]["message"])) {
+                $form["confirmation"]["message"] = apply_filters('the_title', $form["confirmation"]["message"]);
+            }
             //$confirmation = empty($form["confirmation"]["message"]) ? "{$anchor} " : "{$anchor}<div id='gform_confirmation_wrapper_{$form["id"]}' class='gform_confirmation_wrapper {$cssClass}'><div id='gforms_confirmation_message' class='gform_confirmation_message_{$form["id"]}'>" . GFCommon::replace_variables($form["confirmation"]["message"], $form, $lead, false, true, $nl2br) . "</div></div>";
             $confirmation = empty($form["confirmation"]["message"]) ? "{$anchor} " : "{$anchor}<div id='gform_confirmation_wrapper_{$form["id"]}' class='validation_error alert alert-danger alert-dismissible fade in gform_confirmation_wrapper {$cssClass}'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>×</span></button><div id='gforms_confirmation_message' class='gform_confirmation_message_{$form["id"]}'>" . GFCommon::replace_variables($form["confirmation"]["message"], $form, $lead, false, true, $nl2br) . "<a onclick='document.location.reload(true)'> Please, click to proceed</a></div></div>";
         }
