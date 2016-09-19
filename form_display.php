@@ -732,6 +732,9 @@ class GFFormDisplay{
 
         if($button["type"] == "text" || empty($button["imageUrl"])){
             $button_text = !empty($button["text"]) ? $button["text"] : $default_text;
+            if (function_exists('qtranxf_getLanguage') && !empty($button["text"])) {
+                $button_text = apply_filters('the_title',$button_text);
+            }
             $button_input = "<input type='{$input_type}' id='{$button_input_id}' class='{$class} btn btn-default' value='" . esc_attr($button_text) . "' {$tabindex} {$onclick}/>";
         }
         else{

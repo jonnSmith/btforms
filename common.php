@@ -1456,13 +1456,13 @@ class GFCommon{
 
         $to_field = "";
         if(rgar($notification, "toType") == "field"){
-        	$to_field = rgar($notification, "toField");
+            $to_field = rgar($notification, "toField");
             if(rgempty("toField", $notification)){
                 $to_field = rgar($notification, "to");
-			}
+            }
         }
 
-		$email_to = rgar($notification, "to");
+        $email_to = rgar($notification, "to");
         //do routing logic if "to" field doesn't have a value (to support legacy notifications what will run routing prior to this method
         if(empty($email_to) && rgar($notification, "toType") == "routing"){
             $email_to = array();
@@ -1479,7 +1479,7 @@ class GFCommon{
             $email_to = join(",", $email_to);
         }
         else if (!empty($to_field)) {
-        	$source_field = RGFormsModel::get_field($form, $to_field);
+            $source_field = RGFormsModel::get_field($form, $to_field);
             $email_to = RGFormsModel::get_lead_field_value($lead, $source_field);
         }
 
@@ -1625,20 +1625,20 @@ class GFCommon{
 
         //invalid to email address or no content. can't send email
         if(!GFCommon::is_valid_email($to) || (empty($subject) && empty($message))){
-         	GFCommon::log_debug("Cannot send email because either the TO address is invalid or there is no SUBJECT or MESSAGE.");
-         	GFCommon::log_debug(print_r(compact("to", "subject", "message"), true));
+             GFCommon::log_debug("Cannot send email because either the TO address is invalid or there is no SUBJECT or MESSAGE.");
+             GFCommon::log_debug(print_r(compact("to", "subject", "message"), true));
             return;
-		}
+        }
 
         if(!GFCommon::is_valid_email($from))
             $from = get_bloginfo("admin_email");
 
         //invalid from address. can't send email
         if(!GFCommon::is_valid_email($from)){
-         	GFCommon::log_debug("Cannot send email because the FROM address is invalid.");
-         	GFCommon::log_debug(print_r(compact("to", "from", "subject"), true));
+             GFCommon::log_debug("Cannot send email because the FROM address is invalid.");
+             GFCommon::log_debug(print_r(compact("to", "from", "subject"), true));
             return;
-		}
+        }
 
         $content_type = $message_format == "html" ? "text/html" : "text/plain";
 
@@ -2664,6 +2664,7 @@ class GFCommon{
 
     public static function get_canadian_provinces_dropdown($selected_province = ""){
         $states = array_merge(array(''), self::get_canadian_provinces());
+        $str = '';
         foreach($states as $state){
             $selected = $state == $selected_province ? "selected='selected'" : "";
             $str .= "<option value='" . esc_attr($state) . "' $selected>" . $state . "</option>";
@@ -2802,6 +2803,11 @@ class GFCommon{
         $class_suffix = RG_CURRENT_VIEW == "entry" ? "_admin" : "";
         $class = $size . $class_suffix;
 
+        if (function_exists('qtranxf_getLanguage')){
+            $field["label"] = apply_filters('the_title',$field["label"]);
+            $field['defaultValue'] = apply_filters('the_title',$field['defaultValue']);
+        }
+
         $currency = "";
         if(RG_CURRENT_VIEW == "entry"){
             $lead = RGFormsModel::get_lead($lead_id);
@@ -2937,6 +2943,8 @@ class GFCommon{
                 $value = empty($value) && !$is_html5 ? "http://" : $value;
                 $html_input_type = $is_html5 ? "url" : "text";
                 $html5_attributes = $is_html5 ? "placeholder='http://'" : "";
+            break;
+
             case "text":
                 if(empty($html_input_type))
                     $html_input_type = "text";
@@ -2958,7 +2966,7 @@ class GFCommon{
                 } else {
                     return sprintf("<div class='" . $bootstrap_container_classes . "'><input name='input_%d' id='%s' type='%s' placeholder='".$field['defaultValue']."' value='%s' $required_attributes class='$bootstrap_classes $class' $max_length $tabindex $logic_event $html5_attributes %s/>$help_block</div>", $id, $field_id, $html_input_type, esc_attr($value), esc_attr($class), $disabled_text);
                 }
-                break;
+            break;
 
             case "email":
 
@@ -2987,6 +2995,7 @@ class GFCommon{
                 }
 
             break;
+
             case "honeypot":
                 $autocomplete = RGFormsModel::is_html5_enabled() ? "autocomplete='off'" : "";
                 return "<div class='ginput_container'><input name='input_{$id}' id='{$field_id}' type='text' value='' {$autocomplete}/></div>";
@@ -3864,7 +3873,7 @@ class GFCommon{
                 //expiration date field
                 $expiration_field =  "<span class='ginput_full{$class_suffix} ginput_cardextras' id='{$field_id}_2_container'>".
 
-                				        "<span class='ginput_cardinfo_left{$class_suffix}' id='{$field_id}_2_container'>".
+                                        "<span class='ginput_cardinfo_left{$class_suffix}' id='{$field_id}_2_container'>".
 
                                             "<span class='ginput_card_expiration_container ginput_card_field'>".
 
@@ -3884,7 +3893,7 @@ class GFCommon{
                 $tabindex = self::get_tabindex();
                 $security_field =        "<span class='ginput_cardinfo_right{$class_suffix}' id='{$field_id}_2_container'>".
                                             "<input type='text' name='input_{$id}.3' id='{$field_id}_3' {$tabindex} {$disabled_text} class='ginput_card_security_code' value='{$security_code}' {$autocomplete} />".
-                				            "<span class='ginput_card_security_code_icon'>&nbsp;</span>".
+                                            "<span class='ginput_card_security_code_icon'>&nbsp;</span>".
                                             "<label for='{$field_id}_3' >" . apply_filters("gform_card_security_code_{$form_id}", apply_filters("gform_card_security_code",__("Security Code", "gravityforms"), $form_id), $form_id) . "</label>".
                                          "</span>".
                                     "</span>";
@@ -4682,10 +4691,10 @@ class GFCommon{
             break;
 
             default :
-            	if (!is_array($value))
-            	{
-                	return nl2br($value);
-				}
+                if (!is_array($value))
+                {
+                    return nl2br($value);
+                }
             break;
         }
     }
@@ -5264,12 +5273,12 @@ class GFCommon{
         $value = false;
 
         foreach($filters as $filter) {
-			if (is_numeric($value)){
-				//value found, exit loop
-				break;
-			}
-            	$value = GFCommon::to_number(GFCommon::replace_variables("{:{$field_id}:$filter}", $form, $lead));
-			}
+            if (is_numeric($value)){
+                //value found, exit loop
+                break;
+            }
+                $value = GFCommon::to_number(GFCommon::replace_variables("{:{$field_id}:$filter}", $form, $lead));
+            }
 
         if(!$value || !is_numeric($value))
             $value = 0;
@@ -5412,10 +5421,10 @@ class GFCommon{
 
         if(!$echo){
             return $gf_vars_json;
-		}
-		else {
-			echo $gf_vars_json;
-		}
+        }
+        else {
+            echo $gf_vars_json;
+        }
     }
 
     public static function is_bp_active() {
